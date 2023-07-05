@@ -55,11 +55,11 @@ CREATE TABLE transfer_status
 
 CREATE TABLE transfer_records
 (
+	transfer_id serial,
 	from_id int NOT NULL,
 	to_id int NOT NULL,
 	amt int NOT NULL,
 	dot date NOT NULL,
-	transfer_id serial,
 	transfer_type int NOT NULL,  
 	transfer_status int NOT NULL, 
 	CONSTRAINT unique_transfer_id UNIQUE (transfer_id),
