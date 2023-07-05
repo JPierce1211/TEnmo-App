@@ -24,7 +24,8 @@ import org.springframework.web.server.ResponseStatusException;
  * Controller to authenticate users.
  */
 @RestController
-public class AuthenticationController {
+public class AuthenticationController
+{
 
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -37,7 +38,8 @@ public class AuthenticationController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public LoginResponse login(@Valid @RequestBody LoginDTO loginDto) {
+    public LoginResponse login(@Valid @RequestBody LoginDTO loginDto)
+    {
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
@@ -53,7 +55,8 @@ public class AuthenticationController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public void register(@Valid @RequestBody RegisterUserDTO newUser) {
+    public void register(@Valid @RequestBody RegisterUserDTO newUser)
+    {
         if (!userDao.create(newUser.getUsername(), newUser.getPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User registration failed.");
         }
@@ -62,8 +65,8 @@ public class AuthenticationController {
     /**
      * Object to return as body in JWT Authentication.
      */
-    static class LoginResponse {
-
+    static class LoginResponse
+    {
         private String token;
         private User user;
 

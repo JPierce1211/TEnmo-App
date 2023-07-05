@@ -66,7 +66,7 @@ public class JdbcUserDao implements UserDao {
         } catch (DataAccessException e) {
             return false;
         }
-
+        String sqlCMD = "INSERT INTO account (balance) VALUES (1000) WHERE user_id = ?";
         // TODO: Create the account record with initial balance
 
         return true;
