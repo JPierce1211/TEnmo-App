@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Account;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -45,9 +46,22 @@ public class JdbcAccount implements AccountDao
     }
 
     @Override
+    public double getBalance(int userId){
+        String sqlCMD = "SELECT balance FROM account WHERE user_id = ? RETURNING balance;";
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sqlCMD, userId);
+        double currentBal = 0;
+        try {
+           currentBal = jdbcTemplate.queryForObject(sqlCMD, double.class, userId);
+
+        }catch (DataAccessException e){
+
+        } return currentBal;
+    }
+
+    @Override
     public boolean create(int userId)
     {
-
+ return true;
     }
 
     private Account mapRowToAccount(SqlRowSet rs)

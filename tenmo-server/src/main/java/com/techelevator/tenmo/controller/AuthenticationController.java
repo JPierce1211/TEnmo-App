@@ -2,6 +2,8 @@ package com.techelevator.tenmo.controller;
 
 import javax.validation.Valid;
 
+import com.techelevator.tenmo.dao.AccountDao;
+import com.techelevator.tenmo.model.Account;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -30,6 +32,7 @@ public class AuthenticationController
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private UserDao userDao;
+    private AccountDao accountDao;
 
     public AuthenticationController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder, UserDao userDao) {
         this.tokenProvider = tokenProvider;
@@ -50,7 +53,7 @@ public class AuthenticationController
         
         User user = userDao.findByUsername(loginDto.getUsername());
 
-        return new LoginResponse(jwt, user);
+        return new LoginResponse(jwt, user, accountDao.getBalance(double.getId()));
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -69,10 +72,12 @@ public class AuthenticationController
     {
         private String token;
         private User user;
+        private double balance;
 
-        LoginResponse(String token, User user) {
+        LoginResponse(String token, User user, double balance) {
             this.token = token;
             this.user = user;
+            this.balance = balance;
         }
 
         public String getToken() {
@@ -90,6 +95,14 @@ public class AuthenticationController
 		public void setUser(User user) {
 			this.user = user;
 		}
+
+        public double getBalance() {
+            return balance;
+        }
+
+        public void setBalance(double balance) {
+            this.balance = balance;
+        }
     }
 }
 
