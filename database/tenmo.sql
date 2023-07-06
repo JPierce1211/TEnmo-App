@@ -40,7 +40,7 @@ CREATE TABLE transfer_type
 	type_id int NOT NULL,
 	type_name varchar(6) NOT NULL,
 	CONSTRAINT PK_type PRIMARY KEY (type_id),
-	--CONSTRAINT FK_type FOREIGN KEY (type_id) REFERENCES transfer_records (transfer_type),
+	--CONSTRAINT FK_type FOREIGN KEY (type_id) REFERENCES transfer (transfer_type),
 	CONSTRAINT uq_type_id UNIQUE (type_id)
 );
 
@@ -49,11 +49,11 @@ CREATE TABLE transfer_status
 	status_id int NOT NULL,
 	status_name varchar(7) NOT NULL,
 	CONSTRAINT PK_status PRIMARY KEY (status_id),
-	--CONSTRAINT FK_status FOREIGN KEY (status_id) REFERENCES transfer_records (transfer_status),
+	--CONSTRAINT FK_status FOREIGN KEY (status_id) REFERENCES transfer (transfer_status),
 	CONSTRAINT uq_status_id UNIQUE (status_id)
 );
 
-CREATE TABLE transfer_records
+CREATE TABLE transfer
 (
 	transfer_id serial,
 	from_id int NOT NULL,

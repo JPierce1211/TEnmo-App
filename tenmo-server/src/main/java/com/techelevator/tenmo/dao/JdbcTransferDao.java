@@ -18,7 +18,7 @@ public class JdbcTransferDao implements TransferDao{
     @Override
     public List<Transfer> findAll(){
         List<Transfer> transfer = new ArrayList<>();
-        String sqlCMD  = "SELECT * FROM transfer_records;";
+        String sqlCMD  = "SELECT * FROM transfer;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sqlCMD);
         while (results.next()){
             Transfer transfers = mapRowToTransfer(results);
@@ -28,7 +28,7 @@ public class JdbcTransferDao implements TransferDao{
     }
     @Override
     public Transfer findByTransferId(int transferId){
-        String sqlCMD = "SELECT * FROM transfer_records WHERE transfer_id = ?;";
+        String sqlCMD = "SELECT * FROM transfer WHERE transfer_id = ?;";
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sqlCMD, transferId);
         if (rowSet.next()){
             return mapRowToTransfer(rowSet);
@@ -38,7 +38,7 @@ public class JdbcTransferDao implements TransferDao{
     @Override
     public boolean createTransfer(int fromId, int toId){
         
-
+    return false;
     }
 
     private Transfer mapRowToTransfer(SqlRowSet rs){
@@ -49,5 +49,6 @@ public class JdbcTransferDao implements TransferDao{
         transfer.setAmt(rs.getInt("amt"));
         transfer.setTransferStatus(rs.getInt("transfer_status"));
         transfer.setTransferType(rs.getInt("transfer_type"));
+        return transfer;
     }
 }

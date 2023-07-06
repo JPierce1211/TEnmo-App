@@ -47,7 +47,7 @@ public class JdbcAccount implements AccountDao
     @Override
     public boolean create(int userId)
     {
-
+ return true;
     }
 
     private Account mapRowToAccount(SqlRowSet rs)
