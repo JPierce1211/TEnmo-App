@@ -35,6 +35,11 @@ public class JdbcTransferDao implements TransferDao{
         }
         throw new UsernameNotFoundException("Account " + transferId + " was not found.");
     }
+    @Override
+    public boolean createTransfer(int fromId, int toId){
+        
+
+    }
 
     private Transfer mapRowToTransfer(SqlRowSet rs){
         Transfer transfer = new Transfer();
