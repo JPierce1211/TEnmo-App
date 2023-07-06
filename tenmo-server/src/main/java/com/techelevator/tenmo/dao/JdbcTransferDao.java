@@ -3,6 +3,7 @@ package com.techelevator.tenmo.dao;
 import com.techelevator.tenmo.model.Transfer;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,15 @@ public class JdbcTransferDao implements TransferDao{
             transfer.add(transfers);
         }
         return transfer;
+    }
+    @Override
+    public Transfer findByTransferId(int transferId){
+        String sqlCMD = "SELECT * FROM transfer_records WHERE transfer_id = ?;";
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sqlCMD, transferId);
+        if (rowSet.next()){
+            return mapRowToTransfer(rowSet);
+        }
+        throw new UsernameNotFoundException("Account " + transferId + " was not found.");
     }
 
     private Transfer mapRowToTransfer(SqlRowSet rs){

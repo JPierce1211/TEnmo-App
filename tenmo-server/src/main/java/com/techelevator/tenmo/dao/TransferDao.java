@@ -6,7 +6,8 @@ import java.util.List;
 
 public interface TransferDao {
     List<Transfer> findAll();
-    Transfer findByAccountId(int accountId);
+    Transfer findByTransferId(int transferId);
     boolean create(int fromId, int toId);
+
 
 }
