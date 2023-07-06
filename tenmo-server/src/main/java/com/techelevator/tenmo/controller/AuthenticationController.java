@@ -53,7 +53,7 @@ public class AuthenticationController
         
         User user = userDao.findByUsername(loginDto.getUsername());
 
-        return new LoginResponse(jwt, user, accountDao.getBalance(double.getId()));
+        return new LoginResponse(jwt, user, (double)accountDao.getBalance(user.getId()));
     }
 
     @ResponseStatus(HttpStatus.CREATED)

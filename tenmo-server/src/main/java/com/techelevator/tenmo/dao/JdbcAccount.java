@@ -46,7 +46,7 @@ public class JdbcAccount implements AccountDao
     }
 
     @Override
-    public double getBalance(int userId){
+    public double getBalance(Long userId){
         String sqlCMD = "SELECT balance FROM account WHERE user_id = ? RETURNING balance;";
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sqlCMD, userId);
         double currentBal = 0;
