@@ -3,6 +3,7 @@ package com.techelevator.tenmo.controller;
 import com.techelevator.tenmo.dao.*;
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transaction;
+import com.techelevator.tenmo.model.Transfer;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -36,7 +37,8 @@ public class TransactionController
         this.accountDao = accountDao;
         this.userDao = userDao;
     }
-    @GetMapping("/transfers")
+//    @GetMapping("/transfers")
+//    public List<Transfer>
 
 
 

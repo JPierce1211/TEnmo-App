@@ -39,7 +39,7 @@ public class JdbcTransferDao implements TransferDao{
         throw new UsernameNotFoundException("Account " + transferId + " was not found.");
     }
     @Override
-    public boolean createTransfer(int senderId, int receiverId, double availableSenderBalance,
+    public void createTransfer(int senderId, int receiverId, double availableSenderBalance,
                                   double availableReceiverBalance, double sendingAmt)
     {
         double remainingFromBal = availableSenderBalance - sendingAmt;
@@ -51,7 +51,7 @@ public class JdbcTransferDao implements TransferDao{
         jdbcTemplate.update(sqlToCMD, remainingToBal, receiverId);
         jdbcTemplate.update(sqlSentTrans, senderId, receiverId, sendingAmt, LocalDateTime.now());
         //rtrn = "Funds have been successfully transferred";
-    return false;
+
 
     }
 
