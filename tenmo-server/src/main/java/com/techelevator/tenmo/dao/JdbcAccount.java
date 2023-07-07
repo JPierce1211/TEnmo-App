@@ -47,6 +47,16 @@ public class JdbcAccount implements AccountDao
     }
 
     @Override
+    public Account getAccountById(int id){
+        String sqlCMD = "SELECT * FROM account WHERE account_id = ?";
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sqlCMD, id);
+        if (rowSet.next()){
+            return mapRowToAccount(rowSet);
+        }
+        throw new UsernameNotFoundException("Account " + id + " was not found.");
+    }
+
+    @Override
     public double getBalance(String username){
         String sqlCMD = "SELECT balance from account \n" +
                 "join tenmo_user on tenmo_user.user_id = account.user_id\n" +

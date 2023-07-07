@@ -12,5 +12,6 @@ public interface AccountDao
 
     boolean create(int userId);
     double getBalance(String username);
+    Account getAccountById(int id);
 
 }

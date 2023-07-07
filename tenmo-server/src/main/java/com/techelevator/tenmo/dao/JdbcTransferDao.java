@@ -39,14 +39,14 @@ public class JdbcTransferDao implements TransferDao{
         throw new UsernameNotFoundException("Account " + transferId + " was not found.");
     }
     @Override
-    public void createTransfer(int senderId, int receiverId, double availableSenderBalance,
-                                  double availableReceiverBalance, double sendingAmt)
+    public void createTransfer(int senderId, int receiverId, double availableSenderBalance,double availableReceiverBalance, double sendingAmt)
+         //Insert Transfer
     {
         double remainingFromBal = availableSenderBalance - sendingAmt;
         double remainingToBal = availableReceiverBalance + sendingAmt;
         String sqlFromCMD = "UPDATE account SET balance = ? WHERE user_id = ?";
         String sqlToCMD = "UPDATE account SET balance = ? WHERE user_id = ?";
-        String sqlSentTrans = "INSERT INTO transfer (from_id, to_id, amt, dot, transfer_type, transfer_status) VALUES (?,?,?,?, 1, 1)";
+        String sqlSentTrans = "INSERT INTO transfer (from_id, to_id, amt, dot, transfer_type, transfer_status) VALUES (?,?,?,?, 1, 1) RETURNING transfer_id";
         jdbcTemplate.update(sqlFromCMD, remainingFromBal, senderId);
         jdbcTemplate.update(sqlToCMD, remainingToBal, receiverId);
         jdbcTemplate.update(sqlSentTrans, senderId, receiverId, sendingAmt, LocalDateTime.now());
