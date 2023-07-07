@@ -4,10 +4,12 @@ import com.techelevator.tenmo.model.Transfer;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class JdbcTransferDao implements TransferDao{
     private JdbcTemplate jdbcTemplate;
 
@@ -36,7 +38,8 @@ public class JdbcTransferDao implements TransferDao{
         throw new UsernameNotFoundException("Account " + transferId + " was not found.");
     }
     @Override
-    public boolean createTransfer(int fromId, int toId){
+    public boolean createTransfer(int fromId, int toId)
+    {
         
     return false;
 

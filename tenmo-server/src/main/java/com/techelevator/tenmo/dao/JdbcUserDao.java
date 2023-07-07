@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +18,18 @@ public class JdbcUserDao implements UserDao {
 
     public JdbcUserDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @Override
+    public String findUsernameById(int userId)
+    {
+        String sql = "SELECT username FROM tenmo_user WHERE user_id = ?;";
+        String username = jdbcTemplate.queryForObject(sql, String.class, userId);
+        if (username != null) {
+            return username;
+        } else {
+            return "Name Not Found";
+        }
     }
 
     @Override

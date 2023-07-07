@@ -3,7 +3,7 @@ package com.techelevator.tenmo.controller;
 import javax.validation.Valid;
 
 import com.techelevator.tenmo.dao.AccountDao;
-import com.techelevator.tenmo.model.Account;
+import com.techelevator.tenmo.dao.JdbcAccount;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.model.LoginDTO;
 import com.techelevator.tenmo.model.RegisterUserDTO;
@@ -33,11 +32,14 @@ public class AuthenticationController
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private UserDao userDao;
     private AccountDao accountDao;
+    private final JdbcAccount jdbcaccount;
 
-    public AuthenticationController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder, UserDao userDao) {
+    private double balance;
+    public AuthenticationController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder, UserDao userDao, JdbcAccount jdbcaccount) {
         this.tokenProvider = tokenProvider;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.userDao = userDao;
+        this.jdbcaccount = jdbcaccount;
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -52,8 +54,10 @@ public class AuthenticationController
         String jwt = tokenProvider.createToken(authentication, false);
         
         User user = userDao.findByUsername(loginDto.getUsername());
+        //balance = jdbcaccount.getBalance(loginDto.getUsername());
 
-        return new LoginResponse(jwt, user, (double)accountDao.getBalance(user.getId()));
+
+        return new LoginResponse(jwt, user);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -72,12 +76,11 @@ public class AuthenticationController
     {
         private String token;
         private User user;
-        private double balance;
 
-        LoginResponse(String token, User user, double balance) {
+
+        LoginResponse(String token, User user) {
             this.token = token;
             this.user = user;
-            this.balance = balance;
         }
 
         public String getToken() {
@@ -96,13 +99,6 @@ public class AuthenticationController
 			this.user = user;
 		}
 
-        public double getBalance() {
-            return balance;
-        }
-
-        public void setBalance(double balance) {
-            this.balance = balance;
-        }
     }
 }
 

@@ -3,16 +3,36 @@ package com.techelevator.tenmo.model;
 
 
 public class Transaction {
+    private int senderId;
+    private int receiverId;
     private double availableSenderBalance;
     private double availableReceiverBalance;
     private double requestedAmount;
     private double sendingAmount;
 
-    public Transaction(double availableSenderBalance, double availableReceiverBalance, double requestedAmount, double sendingAmount) {
+    public Transaction(double availableSenderBalance, double availableReceiverBalance, double requestedAmount, double sendingAmount, int senderId, int receiverId) {
         this.availableSenderBalance = availableSenderBalance;
         this.availableReceiverBalance = availableReceiverBalance;
         this.requestedAmount = requestedAmount;
         this.sendingAmount = sendingAmount;
+        this.senderId = senderId;
+        this.receiverId = receiverId;
+    }
+
+    public int getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(int senderId) {
+        this.senderId = senderId;
+    }
+
+    public int getReceiverId() {
+        return receiverId;
+    }
+
+    public void setReceiverId(int receiverId) {
+        this.receiverId = receiverId;
     }
 
     public double getAvailableSenderBalance() {

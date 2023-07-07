@@ -11,6 +11,6 @@ public interface AccountDao
     Account findByUserId(int userId);
 
     boolean create(int userId);
-    double getBalance(Long userId);
+    double getBalance(String username);
 
 }

@@ -15,6 +15,7 @@ public class JdbcAccount implements AccountDao
 {
     private JdbcTemplate jdbcTemplate;
 
+
     public JdbcAccount(JdbcTemplate jdbcTemplate)
     {
         this.jdbcTemplate = jdbcTemplate;
@@ -46,12 +47,14 @@ public class JdbcAccount implements AccountDao
     }
 
     @Override
-    public double getBalance(Long userId){
-        String sqlCMD = "SELECT balance FROM account WHERE user_id = ? RETURNING balance;";
-        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sqlCMD, userId);
+    public double getBalance(String username){
+        String sqlCMD = "SELECT balance from account \n" +
+                "join tenmo_user on tenmo_user.user_id = account.user_id\n" +
+                "where tenmo_user.username = ? RETURNING balance;";
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sqlCMD, username);
         double currentBal = 0;
         try {
-           currentBal = jdbcTemplate.queryForObject(sqlCMD, double.class, userId);
+           currentBal = jdbcTemplate.queryForObject(sqlCMD, double.class, username);
 
         }catch (DataAccessException e){
 
