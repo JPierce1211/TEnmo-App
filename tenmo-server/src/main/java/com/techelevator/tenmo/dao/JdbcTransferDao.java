@@ -6,6 +6,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +41,15 @@ public class JdbcTransferDao implements TransferDao{
     @Override
     public boolean createTransfer(int fromId, int toId)
     {
-        
+        double remainingFromBal = availableSenderBalance - sendingAmt;
+        double remainingToBal = availableReceiverBalance + sendingAmt;
+        String sqlFromCMD = "UPDATE account SET balance = ? WHERE user_id = ?";
+        String sqlToCMD = "UPDATE account SET balance = ? WHERE user_id = ?";
+        String sqlSentTrans = "INSERT INTO transfer (from_id, to_id, amt, dot, transfer_type, transfer_status) VALUES (?,?,?,?, 1, 1)";
+        jdbcTemplate.update(sqlFromCMD, remainingFromBal, senderId);
+        jdbcTemplate.update(sqlToCMD, remainingToBal, receiverId);
+        jdbcTemplate.update(sqlSentTrans, senderId, receiverId, sendingAmt, LocalDateTime.now());
+        rtrn = "Funds have been successfully transferred";
     return false;
 
     }
