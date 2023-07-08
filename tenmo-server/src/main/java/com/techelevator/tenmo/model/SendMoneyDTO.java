@@ -5,12 +5,16 @@ public class SendMoneyDTO
         private int senderId;
         private int receiverId;
         private double sendingAmount;
+        private int transferType;
 
-        public SendMoneyDTO(int senderId, int receiverId, double sendingAmount) {
+
+
+    public SendMoneyDTO(int senderId, int receiverId, double sendingAmount, int transferType) {
 
             this.sendingAmount = sendingAmount;
             this.senderId = senderId;
             this.receiverId = receiverId;
+            this.transferType = transferType;
         }
 
         public int getSenderId() {
@@ -35,6 +39,13 @@ public class SendMoneyDTO
 
         public void setSendingAmount(double sendingAmount) {
             this.sendingAmount = sendingAmount;
+        }
+        public int getTransferType() {
+            return transferType;
+        }
+
+        public void setTransferType(int transferType) {
+            this.transferType = transferType;
         }
 }
 

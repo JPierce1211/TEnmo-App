@@ -14,7 +14,7 @@ import java.util.List;
 public class JdbcAccount implements AccountDao
 {
     private JdbcTemplate jdbcTemplate;
-
+    private double currentBal;
 
     public JdbcAccount(JdbcTemplate jdbcTemplate)
     {
@@ -60,9 +60,9 @@ public class JdbcAccount implements AccountDao
     public double getBalance(String username){
         String sqlCMD = "SELECT balance from account \n" +
                 "join tenmo_user on tenmo_user.user_id = account.user_id\n" +
-                "where tenmo_user.username = ? RETURNING balance;";
+                "where tenmo_user.username = ?;";
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sqlCMD, username);
-        double currentBal = 0;
+
         try {
            currentBal = jdbcTemplate.queryForObject(sqlCMD, double.class, username);
 

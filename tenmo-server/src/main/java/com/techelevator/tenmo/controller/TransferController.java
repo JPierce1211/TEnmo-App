@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.controller;
 
 import com.techelevator.tenmo.dao.*;
+import com.techelevator.tenmo.exception.DaoException;
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.SendMoneyDTO;
 import com.techelevator.tenmo.model.Transfer;
@@ -17,69 +18,84 @@ import java.util.List;
 
 //@PreAuthorize("isAuthenticated()")
 @RestController
-public class TransferController {
+public class TransferController
+{
     private JdbcTemplate jdbcTemplate;
     private JdbcTransferDao transferDao;
     private JdbcAccount accountDao;
     private JdbcUserDao userDao;
 
 
+
+
     public TransferController(JdbcTransferDao transferDao, JdbcAccount accountDao, JdbcUserDao userDao) {
         this.transferDao = transferDao;
         this.accountDao = accountDao;
-        this.userDao =  userDao;
+        this.userDao = userDao;
     }
 
-    @GetMapping("/transfer")
-    public List<Transfer> listTransfers(){
+    @GetMapping("/transfers")
+    public List<Transfer> listTransfers() {
         return transferDao.findAll();
     }
-    @GetMapping("/transfer/{id}")
-    public Transfer getTransferById(@PathVariable int transferId){
-        Transfer transfer = transferDao.findByTransferId(transferId);
-        if (transfer == null){
+
+    @GetMapping("/transfers/{id}")
+    public Transfer getTransferById(@PathVariable int id) {
+        Transfer transfer = transferDao.findByTransferId(id);
+        if (transfer == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Transfer not found.");
         } else {
             return transfer;
         }
     }
+
     @PostMapping("/transfers")
-    public Transfer sendMoney(@RequestBody SendMoneyDTO sendMoneyDto) { //Can do both sending and receiving in this annotation
-        //change return type to Transfer due to entry into transfer table
-        double availableSenderBalance;
-        double availableReceiverBalance;
+    public Transfer transferMoney(@RequestBody SendMoneyDTO sendMoneyDto)
+    {
+        Transfer transfer = new Transfer();
         int senderId = sendMoneyDto.getSenderId();
         int receiverId = sendMoneyDto.getReceiverId();
+        double availableSenderBalance;
+        double availableReceiverBalance;
         double sendingAmt = sendMoneyDto.getSendingAmount();
-        availableSenderBalance = accountDao.getBalance(userDao.findUsernameById(senderId)); //If getBalance works keep these
-        availableReceiverBalance = accountDao.getBalance(userDao.findUsernameById(receiverId)); //If getBalance works keep these
-        String rtrn = null;
-        //if (availableSenderBalance < sendingAmt){
-        //
-        //try { //line 53 down goes into transferDao
+        availableSenderBalance = accountDao.getBalance(userDao.findUsernameById(senderId));
+        availableReceiverBalance = accountDao.getBalance(userDao.findUsernameById(receiverId));
+        int transType = sendMoneyDto.getTransferType();
 
-            if (availableSenderBalance < sendingAmt) {
-//                String sqlFailedTrans = "INSERT INTO transfer (from_id, to_id, amt, dot, transfer_type, transfer_status) VALUES (?,?,?,?, 1, 2)";
-//                jdbcTemplate.update(sqlFailedTrans, senderId, receiverId, sendingAmt, LocalDateTime.now());
-                rtrn = "There are not enough funds to cover this transfer."; //create exception for insufficient funds and put throw new (created Exception) look at Dao day 2
+        if (transType == 1) {
+            if (availableSenderBalance >= sendingAmt) {
+                transfer.setFromId(senderId);
+                transfer.setToId(receiverId);
+                transfer.setAmt(sendingAmt);
+                transfer.setTransferType(transType);
+                transfer.setTransferStatus(1);
             }
-//            if (availableSenderBalance >= sendingAmt) { //Line 63 down needs to go into JdbcTransfer Create() //leave if condition in controller
-//                double remainingFromBal = availableSenderBalance - sendingAmt;
-//                double remainingToBal = availableReceiverBalance + sendingAmt;
-//                String sqlFromCMD = "UPDATE account SET balance = ? WHERE user_id = ?";
-//                String sqlToCMD = "UPDATE account SET balance = ? WHERE user_id = ?";
-//                String sqlSentTrans = "INSERT INTO transfer (from_id, to_id, amt, dot, transfer_type, transfer_status) VALUES (?,?,?,?, 1, 1)";
-//                jdbcTemplate.update(sqlFromCMD, remainingFromBal, senderId);
-//                jdbcTemplate.update(sqlToCMD, remainingToBal, receiverId);
-//                jdbcTemplate.update(sqlSentTrans, senderId, receiverId, sendingAmt, LocalDateTime.now());
-//                rtrn = "Funds have been successfully transferred";
-//            }
-//        } catch (CannotGetJdbcConnectionException e) {
-//            System.out.println("Cannot Get a connection to the data: " + e);
-//        } catch (DataIntegrityViolationException e) {
-//            System.out.println("Data is messed up (DIV): " + e);
-//        }
-       return null;
-    }
+            if (availableSenderBalance < sendingAmt) {
+                throw new DaoException("Not enough funds to cover this requested transfer!");
+            }
+        }
+        if (transType == 2)
+        {
+            if (availableReceiverBalance >= sendingAmt) {
+                transfer.setFromId(senderId);
+                transfer.setToId(receiverId);
+                transfer.setAmt(sendingAmt);
+                transfer.setTransferType(transType);
+                transfer.setTransferStatus(2);
+            }
+            if (availableReceiverBalance < sendingAmt) {
+                throw new DaoException("Not enough funds to cover this requested transfer!");
+            }
+        }
+        if (transType > 2 || transType < 1)
+        {
+            throw new DaoException("Wrong input for transfer type. Use (1) to send funds, use (2) to request funds. All other entries are invalid");
+        }
+                 return transferDao.createTransfer(transfer);
 
+
+
+
+
+    }
 }

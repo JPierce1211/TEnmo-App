@@ -4,12 +4,12 @@ public class Transfer {
     private int transferId;
     private int fromId;
     private int toId;
-    private int amt;
+    private double amt;
     private int transferType;
     private int transferStatus;
     public Transfer()
     {}
-    public Transfer(int transferId, int fromId, int toId, int amt,
+    public Transfer(int transferId, int fromId, int toId, double amt,
                     int transferType, int transferStatus){
         this.transferId = transferId;
         this.fromId = fromId;
@@ -43,11 +43,11 @@ public class Transfer {
         this.toId = toId;
     }
 
-    public int getAmt() {
+    public double getAmt() {
         return amt;
     }
 
-    public void setAmt(int amt) {
+    public void setAmt(double amt) {
         this.amt = amt;
     }
 
