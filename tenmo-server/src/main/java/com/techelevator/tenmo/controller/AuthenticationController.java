@@ -54,7 +54,7 @@ public class AuthenticationController
         String jwt = tokenProvider.createToken(authentication, false);
         
         User user = userDao.findByUsername(loginDto.getUsername());
-        //balance = jdbcaccount.getBalance(loginDto.getUsername());
+
 
 
         return new LoginResponse(jwt, user);

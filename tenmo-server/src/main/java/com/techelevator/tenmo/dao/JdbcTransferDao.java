@@ -13,7 +13,6 @@ import java.util.List;
 
 @Component
 public class JdbcTransferDao implements TransferDao{
-    //private Account account = new Account();
     private JdbcTemplate jdbcTemplate;
     private JdbcAccount accountDao;
     private JdbcUserDao userDao;

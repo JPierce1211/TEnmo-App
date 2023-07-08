@@ -2,21 +2,14 @@ package com.techelevator.tenmo.controller;
 
 import com.techelevator.tenmo.dao.*;
 import com.techelevator.tenmo.exception.DaoException;
-import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.SendMoneyDTO;
 import com.techelevator.tenmo.model.Transfer;
-import com.techelevator.tenmo.model.User;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
-//@PreAuthorize("isAuthenticated()")
 @RestController
 public class TransferController
 {
